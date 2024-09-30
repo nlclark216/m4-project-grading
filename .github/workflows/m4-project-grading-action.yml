@@ -1,0 +1,52 @@
+name: M4 Team Project Mocha Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      render_url:
+        description: 'Your Render API URL'
+        required: true
+
+jobs:
+  m4-project-grading-test-run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pull Docker Image
+        run: |
+          docker pull wduffy/m4-tests:latest
+
+      - name: Initialize Exit Code Variable
+        run: echo "exit_code=0" >> $GITHUB_ENV
+
+      - name: Run Full Mocha Tests with Your Render API URL
+        run: |
+          docker run -e API_URL=${{ github.event.inputs.render_url }} wduffy/m4-tests:latest || echo "exit_code=1" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - name: Rerun Auth Specs
+        run: |
+          docker run -e API_URL=${{ github.event.inputs.render_url }} wduffy/m4-tests:latest npm run test-auth || echo "exit_code=1" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - name: Rerun Spots Specs
+        run: |
+          docker run -e API_URL=${{ github.event.inputs.render_url }} wduffy/m4-tests:latest npm run test-spots || echo "exit_code=1" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - name: Rerun Reviews Specs
+        run: |
+          docker run -e API_URL=${{ github.event.inputs.render_url }} wduffy/m4-tests:latest npm run test-reviews || echo "exit_code=1" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - name: Rerun Delete Images and Query Params Specs
+        run: |
+          docker run -e API_URL=${{ github.event.inputs.render_url }} wduffy/m4-tests:latest npm run test-images || echo "exit_code=1" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - name: Fail if Any Test Failed
+        run: |
+          if [ "$exit_code" -ne 0 ]; then
+            echo "One or more tests failed. Marking the workflow as failed."
+            exit 1
+          fi
