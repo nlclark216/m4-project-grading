@@ -2,9 +2,6 @@
 
 You can use the GitHub Actions workflow to run your tests and send a link to the results to your Instructor.
 
-[![GitHub Actions](https://img.shields.io/badge/Run%20Your%20Tests-Actions-blue?logo=github)](../../actions)
-
-
 ## Detailed Guide with Pictures
 
 ### Fork the Repo
@@ -29,7 +26,8 @@ Here's what it'll look like when you've forked the repo:
 
 ### Run the Action
 
-You can access the action by clicking the "Actions" tab or "Run Your Tests" button.
+You can access the action by clicking the "Actions" tab or "Run Your Tests" button listed below.
+- [![GitHub Actions](https://img.shields.io/badge/Run%20Your%20Tests-Actions-blue?logo=github)](../../actions)
 <br />
 
 ![alt text](./readme-snippets/image-3.png)
